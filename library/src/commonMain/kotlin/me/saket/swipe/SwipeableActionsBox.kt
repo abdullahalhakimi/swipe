@@ -2,16 +2,13 @@ package me.saket.swipe
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.Orientation.Horizontal
-import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -19,8 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.layout.layout
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
@@ -48,9 +48,8 @@ fun SwipeableActionsBox(
   swipeThreshold: Dp = 40.dp,
   backgroundUntilSwipeThreshold: Color = Color.DarkGray,
   content: @Composable BoxScope.() -> Unit
-) = BoxWithConstraints(modifier) {
+) = Box(modifier) {
   state.also {
-    it.layoutWidth = constraints.maxWidth
     it.swipeThresholdPx = LocalDensity.current.run { swipeThreshold.toPx() }
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     it.actions = remember(endActions, startActions, isRtl) {
@@ -61,22 +60,27 @@ fun SwipeableActionsBox(
     }
   }
 
-  val backgroundColor: Color by animateColorAsState(
-    when {
-      state.swipedAction != null -> state.swipedAction!!.value.background
-      !state.hasCrossedSwipeThreshold() -> backgroundUntilSwipeThreshold
-      state.visibleAction != null -> state.visibleAction!!.value.background
-      else -> Color.Transparent
-    }
-  )
+  val backgroundColor = when {
+    state.swipedAction != null -> state.swipedAction!!.value.background
+    !state.hasCrossedSwipeThreshold() -> backgroundUntilSwipeThreshold
+    state.visibleAction != null -> state.visibleAction!!.value.background
+    else -> Color.Transparent
+  }
+  val animatedBackgroundColor: Color = if (state.layoutWidth == 0) {
+    // Use the current color immediately because paparazzi can only capture the 1st frame.
+    // https://github.com/cashapp/paparazzi/issues/1261
+    backgroundColor
+  } else {
+    animateColorAsState(backgroundColor).value
+  }
 
   val scope = rememberCoroutineScope()
   Box(
     modifier = Modifier
+      .onSizeChanged { state.layoutWidth = it.width }
       .absoluteOffset { IntOffset(x = state.offset.value.roundToInt(), y = 0) }
       .drawOverContent { state.ripple.draw(scope = this) }
-      .draggable(
-        orientation = Horizontal,
+      .horizontalDraggable(
         enabled = !state.isResettingOnRelease,
         onDragStopped = {
           scope.launch {
@@ -93,9 +97,16 @@ fun SwipeableActionsBox(
       modifier = Modifier.matchParentSize(),
       action = action,
       offset = state.offset.value,
-      backgroundColor = backgroundColor,
+      backgroundColor = animatedBackgroundColor,
       content = { action.value.icon() }
     )
+  }
+
+  val hapticFeedback = LocalHapticFeedback.current
+  if (state.hasCrossedSwipeThreshold() && state.swipedAction == null) {
+    LaunchedEffect(state.visibleAction) {
+      hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+    }
   }
 }
 
