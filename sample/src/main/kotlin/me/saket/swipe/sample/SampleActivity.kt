@@ -18,8 +18,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.twotone.ReplyAll
 import androidx.compose.material.icons.twotone.Archive
-import androidx.compose.material.icons.twotone.ReplyAll
 import androidx.compose.material.icons.twotone.Snooze
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -75,9 +75,9 @@ class SampleActivity : AppCompatActivity() {
           }
         ) { contentPadding ->
           LazyColumn(Modifier.padding(contentPadding).fillMaxSize()) {
-            items(20) { index ->
-              SwipeableBoxPreview(
-                Modifier.fillMaxWidth()
+            items(20) {
+              SwappableBoxPreview(
+                Modifier.fillMaxWidth(),
               )
             }
           }
@@ -88,19 +88,19 @@ class SampleActivity : AppCompatActivity() {
 }
 
 @Composable
-private fun SwipeableBoxPreview(modifier: Modifier = Modifier) {
+private fun SwappableBoxPreview(modifier: Modifier = Modifier) {
   var isSnoozed by rememberSaveable { mutableStateOf(false) }
   var isArchived by rememberSaveable { mutableStateOf(false) }
 
   val replyAll = SwipeAction(
-    icon = rememberVectorPainter(Icons.TwoTone.ReplyAll),
+    icon = rememberVectorPainter(Icons.AutoMirrored.TwoTone.ReplyAll),
     background = Color.Perfume,
     onSwipe = { println("Reply swiped") },
     isUndo = false,
   )
   val snooze = SwipeAction(
     icon = rememberVectorPainter(Icons.TwoTone.Snooze),
-    background = Color.SeaBuckthorn,
+    background = Color.SeaBlackthorn,
     onSwipe = { isSnoozed = !isSnoozed },
     isUndo = isSnoozed,
   )
@@ -159,7 +159,7 @@ private fun BatmanIpsumItem(
         Text(
           modifier = Modifier
             .padding(top = 16.dp)
-            .background(Color.SeaBuckthorn.copy(alpha = 0.4f), RoundedCornerShape(4.dp))
+            .background(Color.SeaBlackthorn.copy(alpha = 0.4f), RoundedCornerShape(4.dp))
             .padding(horizontal = 8.dp, vertical = 4.dp),
           text = "Snoozed until tomorrow",
           style = MaterialTheme.typography.labelLarge
@@ -169,6 +169,6 @@ private fun BatmanIpsumItem(
   }
 }
 
-val Color.Companion.SeaBuckthorn get() = Color(0xFFF9A825)
+val Color.Companion.SeaBlackthorn get() = Color(0xFFF9A825)
 val Color.Companion.Fern get() = Color(0xFF66BB6A)
 val Color.Companion.Perfume get() = Color(0xFFD0BCFF)
