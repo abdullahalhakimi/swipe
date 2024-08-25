@@ -19,23 +19,23 @@ import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 @Composable
-fun rememberSwipeableActionsState(): SwipeableActionsState {
-  return remember { SwipeableActionsState() }
+fun rememberSwappableActionsState(): SwappableActionsState {
+  return remember { SwappableActionsState() }
 }
 
 /**
- * The state of a [SwipeableActionsBox].
+ * The state of a [SwappableActionsBox].
  */
 @Stable
-class SwipeableActionsState internal constructor() {
+class SwappableActionsState internal constructor() {
   /**
-   * The current position (in pixels) of a [SwipeableActionsBox].
+   * The current position (in pixels) of a [SwappableActionsBox].
    */
   val offset: State<Float> get() = offsetState
   internal var offsetState = mutableStateOf(0f)
 
   /**
-   * Whether [SwipeableActionsBox] is currently animating to reset its offset after it was swiped.
+   * Whether [SwappableActionsBox] is currently animating to reset its offset after it was swiped.
    */
   val isResettingOnRelease: Boolean by derivedStateOf {
     swipedAction != null

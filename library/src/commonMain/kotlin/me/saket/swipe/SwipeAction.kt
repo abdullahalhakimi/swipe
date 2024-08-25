@@ -9,15 +9,15 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 
 /**
- * Represents an action that can be shown in [SwipeableActionsBox].
+ * Represents an action that can be shown in [SwappableActionsBox].
  *
- * @param background Color used as the background of [SwipeableActionsBox] while
+ * @param background Color used as the background of [SwappableActionsBox] while
  * this action is visible. If this action is swiped, its background color is
  * also used for drawing a ripple over the content for providing a visual
  * feedback to the user.
  *
  * @param weight The proportional width to give to this element, as related
- * to the total of all weighted siblings. [SwipeableActionsBox] will divide its
+ * to the total of all weighted siblings. [SwappableActionsBox] will divide its
  * horizontal space and distribute it to actions according to their weight.
  *
  * @param isUndo Determines the direction in which a ripple is drawn when this

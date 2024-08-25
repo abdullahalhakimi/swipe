@@ -30,6 +30,7 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,12 +40,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import me.saket.swipe.SwipeAction
-import me.saket.swipe.SwipeableActionsBox
+import me.saket.swipe.SwappableActionsBox
 import me.saket.swipe.sample.theme.DarkTheme
 import me.saket.swipe.sample.theme.LightTheme
 
@@ -67,18 +70,22 @@ class SampleActivity : AppCompatActivity() {
       } else {
         if (systemInDarkTheme) DarkTheme else LightTheme
       }
-
-      MaterialTheme(colors) {
-        Scaffold(
-          topBar = {
-            TopAppBar(title = { Text(stringResource(R.string.app_name)) })
-          }
-        ) { contentPadding ->
-          LazyColumn(Modifier.padding(contentPadding).fillMaxSize()) {
-            items(20) {
-              SwappableBoxPreview(
-                Modifier.fillMaxWidth(),
-              )
+      CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+        MaterialTheme(colors) {
+          Scaffold(
+            topBar = {
+              TopAppBar(title = { Text(stringResource(R.string.app_name)) })
+            }
+          ) { contentPadding ->
+            LazyColumn(
+              Modifier
+                .padding(contentPadding)
+                .fillMaxSize()) {
+              items(20) {
+                SwappableBoxPreview(
+                  Modifier.fillMaxWidth(),
+                )
+              }
             }
           }
         }
@@ -111,7 +118,7 @@ private fun SwappableBoxPreview(modifier: Modifier = Modifier) {
     isUndo = isArchived,
   )
 
-  SwipeableActionsBox(
+  SwappableActionsBox(
     modifier = modifier,
     startActions = listOf(replyAll),
     endActions = listOf(snooze, archive),

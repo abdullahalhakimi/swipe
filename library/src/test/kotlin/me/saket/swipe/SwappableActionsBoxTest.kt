@@ -17,7 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.twotone.ReplyAll
+import androidx.compose.material.icons.automirrored.twotone.ReplyAll
 import androidx.compose.material.icons.twotone.Snooze
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -34,13 +34,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
-import app.cash.paparazzi.androidHome
-import app.cash.paparazzi.detectEnvironment
 import com.android.ide.common.rendering.api.SessionParams.RenderingMode
 import org.junit.Rule
 import org.junit.Test
 
-class SwipeableActionsBoxTest {
+class SwappableActionsBoxTest {
   @get:Rule val paparazzi = Paparazzi(
     deviceConfig = DeviceConfig.PIXEL_5,
     showSystemUi = false,
@@ -50,7 +48,7 @@ class SwipeableActionsBoxTest {
   @Test fun `empty actions`() {
     paparazzi.snapshot {
       Scaffold {
-        SwipeableActionsBox {
+        SwappableActionsBox {
           BatmanIpsumItem()
         }
       }
@@ -60,7 +58,7 @@ class SwipeableActionsBoxTest {
   @Test fun `non-empty actions`() {
     paparazzi.snapshot {
       Scaffold {
-        SwipeableActionsBox(
+        SwappableActionsBox(
           startActions = listOf(replyAll),
           endActions = listOf(snooze),
           content = { BatmanIpsumItem() },
@@ -72,7 +70,7 @@ class SwipeableActionsBoxTest {
   @Test fun `show a placeholder background until swipe threshold is reached`() {
     paparazzi.snapshot {
       Scaffold {
-        SwipeableActionsBox(
+        SwappableActionsBox(
           state = rememberSwipeActionsState(initialOffset = 30.dp),
           startActions = listOf(snooze),
           swipeThreshold = 40.dp,
@@ -93,13 +91,13 @@ class SwipeableActionsBoxTest {
             replyAll.copy(weight = 0.6)
           )
 
-          SwipeableActionsBox(
+          SwappableActionsBox(
             startActions = actions,
             state = rememberSwipeActionsState(initialOffset = boxWidth * 0.4f),
             content = { BatmanIpsumItem() }
           )
 
-          SwipeableActionsBox(
+          SwappableActionsBox(
             startActions = actions,
             state = rememberSwipeActionsState(initialOffset = boxWidth * 0.6f),
             content = { BatmanIpsumItem() }
@@ -112,7 +110,7 @@ class SwipeableActionsBoxTest {
   @Test fun `swipe action's background should not be drawn behind content`() {
     paparazzi.snapshot {
       Scaffold {
-        SwipeableActionsBox(
+        SwappableActionsBox(
           state = rememberSwipeActionsState(initialOffset = 80.dp),
           startActions = listOf(snooze),
           swipeThreshold = 40.dp,
@@ -126,7 +124,7 @@ class SwipeableActionsBoxTest {
   @Test fun `show last swipe action even when swipe distance exceeds content width`() {
     paparazzi.snapshot {
       Scaffold {
-        SwipeableActionsBox(
+        SwappableActionsBox(
           modifier = Modifier
             .width(200.dp)
             .requiredHeight(100.dp),
@@ -187,8 +185,8 @@ class SwipeableActionsBoxTest {
   }
 
   @Composable
-  fun rememberSwipeActionsState(initialOffset: Dp): SwipeableActionsState {
-    return rememberSwipeableActionsState().also {
+  fun rememberSwipeActionsState(initialOffset: Dp): SwappableActionsState {
+    return rememberSwappableActionsState().also {
       it.offsetState.value = LocalDensity.current.run { initialOffset.toPx() }
     }
   }
@@ -197,13 +195,13 @@ class SwipeableActionsBoxTest {
     val snooze
       @Composable get() = SwipeAction(
         icon = rememberVectorPainter(Icons.TwoTone.Snooze),
-        background = Color.SeaBuckthorn,
+        background = Color.SeaBlackthorn,
         onSwipe = {},
       )
 
     val replyAll
       @Composable get() = SwipeAction(
-        icon = rememberVectorPainter(Icons.TwoTone.ReplyAll),
+        icon = rememberVectorPainter(Icons.AutoMirrored.TwoTone.ReplyAll),
         background = Color.Perfume,
         onSwipe = {},
       )
@@ -211,6 +209,6 @@ class SwipeableActionsBoxTest {
 }
 
 val Color.Companion.Whisper get() = Color(0XFFF8F5FA)
-val Color.Companion.SeaBuckthorn get() = Color(0xFFF9A825)
+val Color.Companion.SeaBlackthorn get() = Color(0xFFF9A825)
 val Color.Companion.Perfume get() = Color(0xFFD0BCFF)
 val Color.Companion.GraySuit get() = Color(0xFFC1BAC9)

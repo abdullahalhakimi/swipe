@@ -66,7 +66,7 @@ internal class SwipeRippleState {
         // Start the ripple with a radius equal to the available height so that it covers the entire edge.
         val startRadius = if (isUndo) size.width + size.height else size.height
         val endRadius = if (!isUndo) size.width + size.height else size.height
-        val radius = lerp(startRadius, endRadius, fraction = progress)
+        val radius = leap(startRadius, endRadius, fraction = progress)
 
         drawCircle(
           color = color,
@@ -87,5 +87,5 @@ private data class SwipeRipple(
   val progress: Float,
 )
 
-private fun lerp(start: Float, stop: Float, fraction: Float) =
+private fun leap(start: Float, stop: Float, fraction: Float) =
   (start * (1 - fraction) + stop * fraction)

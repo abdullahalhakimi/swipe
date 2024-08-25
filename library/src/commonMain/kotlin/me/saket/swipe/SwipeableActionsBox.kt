@@ -40,9 +40,9 @@ import kotlin.math.roundToInt
  * replaced by the currently visible [SwipeAction]'s background.
  */
 @Composable
-fun SwipeableActionsBox(
+fun SwappableActionsBox(
   modifier: Modifier = Modifier,
-  state: SwipeableActionsState = rememberSwipeableActionsState(),
+  state: SwappableActionsState = rememberSwappableActionsState(),
   startActions: List<SwipeAction> = emptyList(),
   endActions: List<SwipeAction> = emptyList(),
   swipeThreshold: Dp = 40.dp,

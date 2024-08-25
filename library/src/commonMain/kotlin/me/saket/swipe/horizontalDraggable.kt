@@ -252,11 +252,10 @@ private suspend fun AwaitPointerEventScope.awaitDrag(
   channel: SendChannel<DragEvent>,
   reverseDirection: Boolean,
 ): Boolean {
-  val overSlopOffset = initialDelta
   val xSign = sign(startEvent.position.x)
   val ySign = sign(startEvent.position.y)
   val adjustedStart = startEvent.position -
-    Offset(overSlopOffset.x * xSign, overSlopOffset.y * ySign)
+    Offset(initialDelta.x * xSign, initialDelta.y * ySign)
   channel.trySend(DragStarted(adjustedStart))
 
   channel.trySend(DragDelta(if (reverseDirection) initialDelta * -1f else initialDelta))
