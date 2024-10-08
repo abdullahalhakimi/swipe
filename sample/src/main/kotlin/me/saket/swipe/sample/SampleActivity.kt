@@ -134,7 +134,7 @@ private fun SwappableBoxPreview(modifier: Modifier = Modifier) {
 @Composable
 private fun BatmanIpsumItem(
   modifier: Modifier = Modifier,
-  isSnoozed: Boolean
+  isSnoozed: Boolean,
 ) {
   Row(
     modifier
